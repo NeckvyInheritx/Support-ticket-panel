@@ -14,18 +14,18 @@ export const Button = ({
   ...props           // Rest of the standard button props (onClick, type, disabled, etc.)
 }:ButtonProps) => {
   // Base classes for all buttons
-  let baseClasses = 'font-semibold rounded-lg cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 transition duration-300 ease-in-out';
+  let baseClasses = 'font-semibold rounded-md cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 transition duration-300 ease-in-out';
 
   // Apply variant-specific classes
   switch (variant) {
     case 'primary':
-      baseClasses += ' bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500';
+      baseClasses += ' bg-blue-600 text-black hover:bg-blue-700 focus:ring-blue-500';
       break;
     case 'secondary':
       baseClasses += ' bg-gray-300 text-gray-800 hover:bg-gray-400 focus:ring-gray-500';
       break;
     case 'outline':
-      baseClasses += ' bg-white border border-gray-400 text-gray-700 hover:bg-gray-100 focus:ring-gray-300';
+      baseClasses += ' bg-white border border-gray-400 !text-gray-700 hover:bg-gray-100 focus:ring-gray-300';
       break;
     case 'danger':
       baseClasses += ' bg-red-600 text-white hover:bg-red-700 focus:ring-red-500';

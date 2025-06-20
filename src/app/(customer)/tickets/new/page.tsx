@@ -7,33 +7,9 @@ import { Input } from '@/components/atoms/Input'
 import { TextArea } from '@/components/atoms/TextArea' // New TextArea component
 import { Select } from '@/components/atoms/Select'
 import { Button } from '@/components/atoms/Button'
+import { ticketCategoryOptions, ticketPriorityOptions } from '@/lib/constants/ticket'
+import toast from 'react-hot-toast'
 
-const ticketPriorityOptions = [
-  { value: 'low', label: 'Low' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'high', label: 'High' },
-  { value: 'urgent', label: 'Urgent' },
-]
-
-const ticketCategoryOptions = [
-  { value: 'Order & Delivery Issues', label: 'Order & Delivery Issues' },
-  { value: 'Payments & Refunds', label: 'Payments & Refunds' },
-  {
-    value: 'Website & Technical Support',
-    label: 'Website & Technical Support',
-  },
-  { value: 'Product Inquiries', label: 'Product Inquiries' },
-  { value: 'Pharmacy & Health Services', label: 'Pharmacy & Health Services' },
-  { value: 'Manufacturing & Wholesale', label: 'Manufacturing & Wholesale' },
-  {
-    value: 'Accounts & Profile Management',
-    label: 'Accounts & Profile Management',
-  },
-  {
-    value: 'Feedback & General Enquiries',
-    label: 'Feedback & General Enquiries',
-  },
-]
 
 const validationSchema = Yup.object({
   title: Yup.string()
@@ -47,12 +23,12 @@ const validationSchema = Yup.object({
   category: Yup.string().required('Category is required'),
 })
 
-export default function NewTicketPage() {
+export default function CreateNewTicketPage() {
   const router = useRouter()
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full space-y-8">
+      <div className="max-w-xl">
         <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
           {/* Header */}
           <div className="text-center mb-8">
@@ -81,7 +57,7 @@ export default function NewTicketPage() {
                 setSubmitting(false)
                 resetForm() // Clear form after submission
                 router.push('/dashboard') // Redirect to dashboard after creation
-                alert('Ticket submitted successfully!') // Use a custom message box in a real app
+                toast.success('Ticket submitted successfully!')
               }, 1500)
             }}
           >
@@ -109,14 +85,15 @@ export default function NewTicketPage() {
                     value={values.title}
                     onChange={handleChange}
                     hasError={touched.title && !!errors.title}
+                    errorMessage={touched.title ? errors.title : undefined}
                     placeholder="e.g., Unable to access account"
                     className="w-full"
                   />
-                  <ErrorMessage
+                  {/* <ErrorMessage
                     name="title"
                     component="div"
                     className="text-red-500 text-sm mt-1"
-                  />
+                  /> */}
                 </div>
 
                 {/* Description Field */}
@@ -133,14 +110,17 @@ export default function NewTicketPage() {
                     value={values.description}
                     onChange={handleChange}
                     hasError={touched.description && !!errors.description}
+                    errorMessage={
+                      touched.description ? errors.description : undefined
+                    }
                     placeholder="Please provide a detailed description of your issue..."
                     className="w-full min-h-[120px]" // Min height for description area
                   />
-                  <ErrorMessage
+                  {/* <ErrorMessage
                     name="description"
                     component="div"
                     className="text-red-500 text-sm mt-1"
-                  />
+                  /> */}
                 </div>
 
                 {/* Priority Select Field */}
@@ -158,14 +138,17 @@ export default function NewTicketPage() {
                     onChange={(value) => setFieldValue('priority', value)} // Formik's setFieldValue for Select
                     options={ticketPriorityOptions}
                     hasError={touched.priority && !!errors.priority}
+                    errorMessage={
+                      touched.priority ? errors.priority : undefined
+                    }
                     selectClassName="w-full"
                     allowClear // Allow clearing the selection
                   />
-                  <ErrorMessage
+                  {/* <ErrorMessage
                     name="priority"
                     component="div"
                     className="text-red-500 text-sm mt-1"
-                  />
+                  /> */}
                 </div>
 
                 {/* Category Select Field */}
@@ -182,15 +165,18 @@ export default function NewTicketPage() {
                     value={values.category}
                     onChange={(value) => setFieldValue('category', value)} // Formik's setFieldValue for Select
                     options={ticketCategoryOptions}
-                    hasError={touched.category && !!errors.category}
+                    hasError={touched.priority && !!errors.priority}
+                    errorMessage={
+                      touched.category ? errors.category : undefined
+                    }
                     selectClassName="w-full"
                     allowClear // Allow clearing the selection
                   />
-                  <ErrorMessage
+                  {/* <ErrorMessage
                     name="category"
                     component="div"
                     className="text-red-500 text-sm mt-1"
-                  />
+                  /> */}
                 </div>
 
                 {/* Submit Button */}

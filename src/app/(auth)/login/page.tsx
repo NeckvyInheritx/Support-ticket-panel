@@ -6,7 +6,7 @@ import { ClipLoader } from 'react-spinners'
 import { Input } from '@/components/atoms/Input'
 import { Button } from '@/components/atoms/Button'
 import Link from 'next/link'
-import Loader from '@/app/loading'
+import { useAuth } from '@/context/AuthContext'
 
 const validationSchema = Yup.object({
     email: Yup.string()
@@ -19,8 +19,7 @@ const validationSchema = Yup.object({
 
 export default function LoginForm() {
   const router = useRouter()
-  // This component handles the login form with validation and submission
-  // It uses Formik for form state management and Yup for validation
+  const { login } = useAuth()
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -38,12 +37,15 @@ export default function LoginForm() {
             initialValues={{ email: '', password: '' }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              console.log('Logged in as:', values.email)
-              // Simulate API call
+             console.log('Attempting to log in with:', values.email)
               setTimeout(() => {
                 setSubmitting(false)
-                router.push('/dashboard')
-              }, 1000)
+                
+                const userName = values.email.split('@')[0]; 
+                const userId = 'user_123'; 
+                login(values.email, userName, userId); 
+                router.push('/dashboard'); 
+              }, 1000);
             }}
           >
             {({ values, handleChange, touched, errors, isSubmitting }) => (
@@ -145,7 +147,7 @@ export default function LoginForm() {
                 </Button>
 
                 {/* Sign up link */}
-                <div className="text-center">
+                <div className="text-center mt-2">
                   <p className="text-sm text-gray-600">
                     Don't have an account?{' '}
                     <Link 

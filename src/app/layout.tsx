@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // Onl
 import  { MEDUSA_BACKEND_URL } from "@/lib/medusa-client";
 import Providers from "@/providers/Providers";
 import Navbar from "@/components/orgmisms/Navbar";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] }); // Next.js default font setup
 
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
               {children}
+               <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
         </Providers>
       </body>
     </html>

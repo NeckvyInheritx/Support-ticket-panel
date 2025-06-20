@@ -10,9 +10,8 @@ interface TicketCardProps {
   ticket: Ticket
 }
 
-
 // Determine badge variant for status
-const getStatusBadgeVariant = (
+export const getStatusBadgeVariant = (
   status: Ticket['status'],
 ): Parameters<typeof Badge>[0]['variant'] => {
   switch (status) {
@@ -30,7 +29,7 @@ const getStatusBadgeVariant = (
 }
 
 // Determine badge variant for priority
-const getPriorityBadgeVariant = (
+export const getPriorityBadgeVariant = (
   priority: Ticket['priority'],
 ): Parameters<typeof Badge>[0]['variant'] => {
   switch (priority) {
@@ -49,8 +48,14 @@ const getPriorityBadgeVariant = (
 
 export const TicketCard = ({ ticket }: TicketCardProps) => {
   return (
-       <Link href={`/tickets/${ticket.id}`} className="hover:shadow-lg transition-shadow duration-200 rounded-lg">
-      <Card className="h-full flex flex-col border-none" data-testid={`ticket-card-${ticket.id}`}>
+    <Link
+      href={`/tickets/${ticket.id}`}
+      className="hover:shadow-lg transition-shadow duration-200 rounded-lg"
+    >
+      <Card
+        className="h-full flex flex-col"
+        data-testid={`ticket-card-${ticket.id}`}
+      >
         {/* Card Header Section */}
         <CardHeader className="pb-3">
           <div className="flex justify-between items-start gap-3">
@@ -58,13 +63,13 @@ export const TicketCard = ({ ticket }: TicketCardProps) => {
               <CardTitle className="text-lg mb-1 hover:text-blue-600 transition-colors">
                 {ticket.title}
               </CardTitle>
-              <p className="text-sm text-gray-500">
-                ID: {ticket.id}
-              </p>
+              <p className="text-sm text-gray-500">ID: {ticket.id}</p>
             </div>
             {/* Using Badge atom directly for status */}
             <Badge
-              text={ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}
+              text={
+                ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)
+              }
               variant={getStatusBadgeVariant(ticket.status)}
             />
           </div>
@@ -76,10 +81,13 @@ export const TicketCard = ({ ticket }: TicketCardProps) => {
             {ticket.description}
           </p>
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-600">
-            
             <div className="flex items-center gap-1.5">
               <CalendarIcon />
-              <span>{formatDistanceToNow(new Date(ticket.createdAt), { addSuffix: true })}</span>
+              <span>
+                {formatDistanceToNow(new Date(ticket.createdAt), {
+                  addSuffix: true,
+                })}
+              </span>
             </div>
             {ticket.category && (
               <div className="flex items-center gap-1.5">
@@ -110,14 +118,15 @@ export const TicketCard = ({ ticket }: TicketCardProps) => {
                   // You can add an actual src here if you have agent avatars, e.g.:
                   // src={`/avatars/${ticket.assignedAgentName.toLowerCase().replace(/\s/g, '-')}.png`}
                 />
-                <span className="text-gray-600">{ticket.assignedAgentName}</span>
+                <span className="text-gray-600">
+                  {ticket.assignedAgentName}
+                </span>
               </>
             )}
             {!ticket.assignedAgentName && (
               <span className="text-gray-600 italic">Unassigned</span>
             )}
           </div>
-          
         </CardFooter>
       </Card>
     </Link>

@@ -9,6 +9,7 @@ interface SelectOption {
 interface CustomSelectProps {
   label?: string;
   hasError?: boolean;
+  errorMessage?: string
   className?: string;           // For wrapper div
   selectClassName?: string;     // For the select component itself
   labelClassName?: string;      // For the label
@@ -20,6 +21,7 @@ interface SelectProps extends Omit<AntSelectProps, 'className'>, CustomSelectPro
 export const Select = ({
   label,
   hasError = false,
+   errorMessage,
   className = '',
   selectClassName = '',
   labelClassName = '',
@@ -39,6 +41,9 @@ export const Select = ({
         status={hasError ? 'error' : undefined}
         {...selectProps}
       />
+      {hasError && errorMessage && (
+        <p className="text-sm text-red-600 mt-1">{errorMessage}</p>
+      )}
     </div>
   );
 };

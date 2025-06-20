@@ -19,7 +19,7 @@ export default function Home() {
         
       </div>
       <div className="mt-10 text-center">
-        <p className="text-sm text-gray-500">
+        {/* <p className="text-sm text-gray-500">
           For support agents and administrators, please access the{' '}
           <a
             href={process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ? `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/app` : 'http://localhost:9000/app'}
@@ -29,7 +29,7 @@ export default function Home() {
           >
             Medusa Admin Dashboard
           </a>.
-        </p>
+        </p> */}
       </div>
     </div>
   );

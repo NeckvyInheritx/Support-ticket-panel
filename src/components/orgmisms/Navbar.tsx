@@ -4,20 +4,20 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // For navigation
 import Button from '../atoms/Button';
+
+
 import Avatar from '../atoms/Avatar';
+import { useAuth } from '@/context/AuthContext';
 
 const Navbar: React.FC = () => {
   const router = useRouter();
+  const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const mockUser = {
-    name: 'John Doe',
-    // avatarUrl: 'https://placehold.co/100x100/F0F8FF/000000?text=JD', // Example avatar image
-  };
 
   const handleLogout = () => {
     // In a real app, this would be an API call to Medusa's logout endpoint
     // e.g., medusaClient.auth.deleteSession();
+    logout();
     router.push('/'); // Redirect to home page after logout
     setIsMobileMenuOpen(false); // Close mobile menu on logout
   };
@@ -31,12 +31,12 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white text-black shadow-md relative z-50 w-full">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white text-black shadow-md z-5 w-full sticky top-0">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
           <Link 
-            href="/" 
+            href="/dashboard" 
             className="text-lg sm:text-xl font-bold tracking-tight flex-shrink-0"
             onClick={closeMobileMenu}
           >
@@ -48,8 +48,8 @@ const Navbar: React.FC = () => {
               <>
                 {/* Profile Avatar and Name */}
                 <div className="flex items-center space-x-3">
-                  <Avatar name={mockUser.name} size="medium" />
-                  <span className="font-medium text-sm lg:text-base">{mockUser.name}</span>
+                  <Avatar name={user?.name} size="medium" />
+                  <span className="font-medium text-sm lg:text-base">{user?.name}</span>
                 </div>
                 {/* Logout Button */}
                 <Button 
@@ -114,9 +114,9 @@ const Navbar: React.FC = () => {
               <>
                 {/* Mobile Profile Section */}
                 <div className="flex items-center space-x-3 px-3 py-3">
-                  <Avatar name={mockUser.name} size="large" />
+                  <Avatar name={user?.name} size="large" />
                   <div className="flex flex-col">
-                    <span className="font-medium text-sm">{mockUser.name}</span>
+                    <span className="font-medium text-sm">{user?.name}</span>
                   </div>
                 </div>
                 

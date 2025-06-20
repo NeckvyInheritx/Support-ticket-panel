@@ -2,20 +2,17 @@
 import Navbar from '@/components/orgmisms/Navbar'
 
 interface DashboardPageProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
-const DashboardPage = ({children}:DashboardPageProps) => {
-
+const DashboardPage = ({ children }: DashboardPageProps) => {
   return (
     <div>
-      <div className="flex">
-        <Navbar/>
-      </div>
-      <div className='bg-blue-50 h-full'>
-      <div className='pt-8 container mx-auto px-4 sm:px-6 lg:px-8 h-[calc(100vh-64px)] overflow-y-auto'>
-        {children}  
-      </div>
+      <Navbar />
+      <div className="bg-blue-50 h-full">
+        <div className="mx-auto pt-8 container px-4 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </div>
     </div>
   )

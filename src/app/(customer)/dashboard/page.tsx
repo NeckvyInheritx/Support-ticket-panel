@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react'
 
 export const DashboardPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
   const [sortBy, setSortBy] = useState('newest')
 
   const ticketsData = useMemo(() => {
