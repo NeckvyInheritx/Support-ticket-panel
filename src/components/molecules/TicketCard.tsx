@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './Card'
 import Avatar from '../atoms/Avatar'
 import { formatDistanceToNow } from 'date-fns'
-import { CalendarIcon, TagIcon, UserIcon } from '../icons'
+import { CalendarIcon, TagIcon } from '../icons'
 
 interface TicketCardProps {
   ticket: Ticket

@@ -1,15 +1,13 @@
 'use client'
 import { Button } from '@/components/atoms/Button'
-import { SearchIcon } from '@/components/icons'
 import { SearchBar } from '@/components/molecules/SearchBar'
-import Navbar from '@/components/orgmisms/Navbar'
 import { TicketList } from '@/components/orgmisms/TicketList'
 import { customerTicketsStatic } from '@/lib/data'
 import { Ticket } from '@/types/ticket'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
-export const DashboardPage = () => {
+export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [sortBy, setSortBy] = useState('newest')
@@ -95,5 +93,3 @@ export const DashboardPage = () => {
     </div>
   )
 }
-
-export default DashboardPage

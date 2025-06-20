@@ -9,18 +9,13 @@ import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { TextArea } from '@/components/atoms/TextArea'
 import { Select } from '@/components/atoms/Select'
-import Avatar from '@/components/atoms/Avatar'
 import {
-  UserIcon,
   TagIcon,
   EditIcon,
   ArrowLeftIcon,
-  CheckIcon,
-  XIcon,
   CalendarIcon,
 } from '@/components/icons'
 import { format } from 'date-fns'
-import { formatDistanceToNow } from 'date-fns'
 import {
   Card,
   CardContent,
@@ -187,7 +182,7 @@ export default function TicketDetailPage() {
           <Formik
             initialValues={initialFormValues}
             validationSchema={ticketDetailValidationSchema}
-            onSubmit={(values, { setSubmitting, resetForm }) =>
+            onSubmit={(values, { setSubmitting }) =>
               handleSave(values, setSubmitting)
             }
             enableReinitialize={true} // Reinitialize form when `ticket` object changes

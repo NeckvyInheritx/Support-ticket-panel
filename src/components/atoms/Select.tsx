@@ -1,10 +1,10 @@
 import React from 'react';
 import { Select as AntSelect, SelectProps as AntSelectProps } from 'antd';
 
-interface SelectOption {
-  value: string;
-  label: string;
-}
+// interface SelectOption {
+//   value: string;
+//   label: string;
+// }
 
 interface CustomSelectProps {
   label?: string;
