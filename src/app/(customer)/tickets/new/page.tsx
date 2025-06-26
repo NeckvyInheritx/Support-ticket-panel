@@ -7,9 +7,11 @@ import { Input } from '@/components/atoms/Input'
 import { TextArea } from '@/components/atoms/TextArea' // New TextArea component
 import { Select } from '@/components/atoms/Select'
 import { Button } from '@/components/atoms/Button'
-import { ticketCategoryOptions, ticketPriorityOptions } from '@/lib/constants/ticket'
+import {
+  ticketCategoryOptions,
+  ticketPriorityOptions,
+} from '@/lib/constants/ticket'
 import toast from 'react-hot-toast'
-
 
 const validationSchema = Yup.object({
   title: Yup.string()
@@ -27,7 +29,7 @@ export default function CreateNewTicketPage() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl">
         <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
           {/* Header */}

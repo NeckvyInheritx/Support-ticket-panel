@@ -9,24 +9,24 @@ import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
 
 const validationSchema = Yup.object({
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
-  })
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required'),
+  password: Yup.string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
+})
 
 export default function LoginForm() {
   const router = useRouter()
   const { login } = useAuth()
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-pale-sky">
       <div className="max-w-md w-full space-y-8">
         <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
           {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Sign in</h2>
+            <p className="text-3xl font-bold text-gray-900 !mb-0">Sign in</p>
             <p className="mt-2 text-sm text-gray-600">
               Access your support panel account
             </p>
@@ -37,24 +37,24 @@ export default function LoginForm() {
             initialValues={{ email: '', password: '' }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
-             console.log('Attempting to log in with:', values.email)
+              console.log('Attempting to log in with:', values.email)
               setTimeout(() => {
                 setSubmitting(false)
-                
-                const userName = values.email.split('@')[0]; 
-                const userId = 'user_123'; 
-                login(values.email, userName, userId); 
-                router.push('/dashboard'); 
-              }, 1000);
+
+                const userName = values.email.split('@')[0]
+                const userId = 'user_123'
+                login(values.email, userName, userId)
+                router.push('/dashboard')
+              }, 1000)
             }}
           >
             {({ values, handleChange, touched, errors, isSubmitting }) => (
               <Form className="space-y-6">
                 {/* Email Field */}
                 <div>
-                  <label 
+                  <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-bold text-gray-700 mb-2"
                   >
                     Email Address
                   </label>
@@ -68,18 +68,18 @@ export default function LoginForm() {
                     placeholder="you@example.com"
                     className="w-full"
                   />
-                  <ErrorMessage 
-                    name="email" 
-                    component="div" 
-                    className="text-red-500 text-sm mt-1" 
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
                   />
                 </div>
 
                 {/* Password Field */}
                 <div>
-                  <label 
+                  <label
                     htmlFor="password"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-bold text-gray-700 mb-2"
                   >
                     Password
                   </label>
@@ -93,10 +93,10 @@ export default function LoginForm() {
                     placeholder="Enter your password"
                     className="w-full"
                   />
-                  <ErrorMessage 
-                    name="password" 
-                    component="div" 
-                    className="text-red-500 text-sm mt-1" 
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
                   />
                 </div>
 
@@ -124,11 +124,11 @@ export default function LoginForm() {
                 </div> */}
 
                 {/* Submit Button */}
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isSubmitting}
-                  variant='primary'
-                  className='w-full'
+                  variant="primary"
+                  className="w-full"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center">
@@ -150,8 +150,8 @@ export default function LoginForm() {
                 <div className="text-center mt-2">
                   <p className="text-sm text-gray-600">
                     Don&apos;t have an account?{' '}
-                    <Link 
-                      href="/signup" 
+                    <Link
+                      href="/signup"
                       className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
                     >
                       Sign up here
@@ -167,9 +167,13 @@ export default function LoginForm() {
         <div className="text-center">
           <p className="text-xs text-gray-500">
             By signing in, you agree to our{' '}
-            <a href="#" className="text-blue-600 hover:text-blue-500">Terms of Service</a>
-            {' '}and{' '}
-            <a href="#" className="text-blue-600 hover:text-blue-500">Privacy Policy</a>
+            <a href="#" className="text-blue-600 hover:text-blue-500">
+              Terms of Service
+            </a>{' '}
+            and{' '}
+            <a href="#" className="text-blue-600 hover:text-blue-500">
+              Privacy Policy
+            </a>
           </p>
         </div>
       </div>

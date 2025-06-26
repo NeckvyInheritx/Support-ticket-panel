@@ -131,10 +131,19 @@ export default function TicketDetailPage() {
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Back to List Button */}
         <div className="mb-8">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={() => router.back()}
             className="inline-flex gap-2"
+          >
+            <ArrowLeftIcon />
+            Back to List
+          </Button> */}
+          <Button
+            onClick={() => router.back()}
+            variant="primary"
+            size="medium"
+            className="flex items-center"
           >
             <ArrowLeftIcon />
             Back to List
@@ -165,7 +174,7 @@ export default function TicketDetailPage() {
                 />
                 {!isEditing && (
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="small"
                     onClick={() => setIsEditing(true)}
                     className="flex gap-2"
@@ -284,9 +293,9 @@ export default function TicketDetailPage() {
 
                   {/* Description Section - Editable */}
                   <div className="border-t border-gray-100 pt-8">
-                      <CardTitle className="text-sm opacity-70 !font-bold text-gray-500 uppercase">
-                        Description
-                      </CardTitle>
+                    <CardTitle className="text-sm opacity-70 !font-bold text-gray-500 uppercase">
+                      Description
+                    </CardTitle>
 
                     {isEditing ? (
                       <div>
@@ -302,9 +311,9 @@ export default function TicketDetailPage() {
                         />
                       </div>
                     ) : (
-                        <p className="text-gray-800 text-base">
-                          {ticket.description}
-                        </p>
+                      <p className="text-gray-800 text-base">
+                        {ticket.description}
+                      </p>
                     )}
                   </div>
                 </CardContent>
@@ -321,7 +330,7 @@ export default function TicketDetailPage() {
                       Cancel
                     </Button>
                     <Button
-                      className='!bg-blue-200'
+                      className="!bg-blue-200"
                       type="submit"
                       variant="primary"
                       disabled={isSubmitting}
