@@ -94,7 +94,6 @@
 //   )
 // }
 
-
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
@@ -104,11 +103,12 @@ import { TicketList } from '@/components/orgmisms/TicketList'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Ticket } from '@/types/ticket'
+import ClipLoader from 'react-spinners/ClipLoader'
 
 // Optional: Define response type for clarity (based on API response)
 interface TicketApiResponse {
-  items: any[]   // Raw API tickets; we'll transform these
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  items: any[] // Raw API tickets; we'll transform these
   total: number
 }
 
@@ -117,7 +117,7 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
   const [page, setPage] = useState(1)
-  const limit = 10
+  const limit = 9
 
   const [token, setToken] = useState<string | null>(null)
 
@@ -131,7 +131,8 @@ export default function DashboardPage() {
     enabled: !!token,
     queryFn: async () => {
       const params = new URLSearchParams()
-      if (statusFilter && statusFilter !== 'all') params.append('status', statusFilter)
+      if (statusFilter && statusFilter !== 'all')
+        params.append('status', statusFilter)
       if (searchTerm) params.append('search', searchTerm)
       params.append('sort', sortBy === 'newest' ? 'desc' : 'asc')
       params.append('page', String(page))
@@ -143,10 +144,11 @@ export default function DashboardPage() {
           Authorization: `Bearer ${token}`,
         },
       })
-      
+
       // Transform backend tickets: assign _id to id
       const transformedData = {
         total: res.data.total,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         items: res.data.items.map((ticket: any) => ({
           ...ticket,
           id: ticket._id, // Transform _id from API to id for frontend use
@@ -171,7 +173,11 @@ export default function DashboardPage() {
             Support Tickets Dashboard
           </h1>
           <Link href="/tickets/new">
-            <Button variant="primary" size="medium" className="flex items-center">
+            <Button
+              variant="primary"
+              size="medium"
+              className="flex items-center"
+            >
               Create New Ticket
             </Button>
           </Link>
@@ -192,15 +198,30 @@ export default function DashboardPage() {
           onSortChange={handleSortChange}
         />
 
-        {isLoading && <div>Loading tickets...</div>}
-        {isError && <div>Error fetching tickets</div>}
+        {isLoading && (
+          <div className="min-h-[200px] flex items-center justify-center">
+            <ClipLoader size={40} color="#3B82F6" />
+            <p className="ml-3 text-gray-600">Loading tickets...</p>
+          </div>
+        )}
+        {isError && (
+          <div className="text-red-600 font-semibold">
+            Error fetching tickets
+          </div>
+        )}
         {!isLoading && data && <TicketList tickets={data.items ?? []} />}
 
         <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
+          <Button
+            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            disabled={page === 1}
+          >
             Previous
           </Button>
-          <Button onClick={() => setPage((p) => p + 1)} disabled={(data?.items?.length ?? 0) < limit}>
+          <Button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={(data?.items?.length ?? 0) < limit}
+          >
             Next
           </Button>
         </div>

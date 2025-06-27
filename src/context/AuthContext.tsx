@@ -8,8 +8,8 @@ import React, {
   useEffect,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+// import { useQuery } from '@tanstack/react-query';
+// import toast from 'react-hot-toast';
 
 // 1. Define the User type
 interface User {
@@ -67,77 +67,86 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 };
 
 // 5. AuthApiProvider for authentication check
-export const AuthApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const router = useRouter();
+// export const AuthApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+//   const [user, setUser] = useState<User | null>(null);
+//   const router = useRouter();
 
-  const { isLoading } = useQuery({
-    queryKey: ['auth', 'me'],
-    queryFn: async () => {
-      const token =
-        typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      if (!token) throw new Error('No token');
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL || ''}/auth/me`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (!res.ok) {
-        throw new Error('Invalid session');
-      }
-      return res.json();
-    },
-    retry: false,
-    onSuccess: (data) => {
-      const newUser: User = {
-        id: data.id,
-        firstName: data.first_name,
-        lastName: data.last_name,
-        email: data.email,
-      };
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-    },
-    onError: () => {
-      setUser(null);
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      toast.error('Session expired. Please log in again.');
-      router.push('/login');
-    },
-    refetchOnWindowFocus: false,
-  });
+//   useEffect(() => {
+//     const storedUser = localStorage.getItem('user');
+//     if (storedUser) {
+//       const parsedUser: User = JSON.parse(storedUser);
+//       setUser(parsedUser);  // Set user directly from localStorage
+//     }
+//   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Checking authentication...
-      </div>
-    );
-  }
+//   const { isLoading } = useQuery({
+//     queryKey: ['auth', 'me'],
+//     queryFn: async () => {
+//       const token =
+//         typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+//       if (!token) throw new Error('No token');
+//       const res = await fetch(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL || ''}/auth/me`,
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
+//       if (!res.ok) {
+//         throw new Error('Invalid session');
+//       }
+//       return res.json();
+//     },
+//     enabled: !user,  // Only trigger the API call if `user` is not set
+//     // retry: false,
+//     onSuccess: (data) => {
+//       const newUser: User = {
+//         id: data.id,
+//         firstName: data.firstName,
+//         lastName: data.lastName,
+//         email: data.email,
+//       };
+//       setUser(newUser);
+//       console.log(newUser,'new user');
+//       localStorage.setItem('user', JSON.stringify(newUser));
+//     },
+//     onError: () => {
+//       setUser(null);
+//       localStorage.removeItem('user');
+//       localStorage.removeItem('token');
+//       toast.error('Session expired. Please log in again.');
+//       router.push('/login');
+//     },
+//     refetchOnWindowFocus: false,
+//   });
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login: (email, firstName, lastName, id) => {
-          const newUser: User = { id, firstName, lastName, email };
-          setUser(newUser);
-          localStorage.setItem('user', JSON.stringify(newUser));
-        },
-        logout: () => {
-          setUser(null);
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-          router.push('/login');
-        },
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
+//   if (isLoading && !user) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center">
+//         Checking authentication...
+//       </div>
+//     );
+//   }
+//   return (
+//     <AuthContext.Provider
+//       value={{
+//         user,
+//         login: (email, firstName, lastName, id) => {
+//           const newUser: User = { id, firstName, lastName, email };
+//           setUser(newUser);
+//           localStorage.setItem('user', JSON.stringify(newUser));
+//         },
+//         logout: () => {
+//           setUser(null);
+//           localStorage.removeItem('user');
+//           localStorage.removeItem('token');
+//           router.push('/login');
+//         },
+//       }}
+//     >
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
 
 // 6. Custom hook for context
 export const useAuth = () => {

@@ -177,14 +177,15 @@ import ProfileModal from '../atoms/ProfileModal'
 
 const Navbar: React.FC = () => {
   const router = useRouter()
-  const { user, logout } = useAuth()
+  const {  logout } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
-  const fullName =
-    user?.firstName && user?.lastName
-      ? `${user.firstName} ${user.lastName}`
-      : 'N/A'
+  const fullName = "Test User"
+  // const fullName =
+  //   user?.firstName && user?.lastName
+  //     ? `${user.firstName} ${user.lastName}`
+  //     : 'N/A'
 
   const handleLogout = () => {
     logout()

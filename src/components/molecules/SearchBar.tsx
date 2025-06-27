@@ -16,7 +16,7 @@ interface SearchBarProps {
 const statusOptions = [
   { value: 'all', label: 'All Statuses' },
   { value: 'open', label: 'Open' },
-  { value: 'in-progress', label: 'In Progress' },
+  { value: 'in_progress', label: 'In Progress' },
   { value: 'resolved', label: 'Resolved' },
 ]
 

@@ -10,11 +10,12 @@ interface ProfileModalProps {
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ onLogout }) => {
   const { user } = useAuth()
+  
 
-  const fullName =
-    user?.firstName && user?.lastName
-      ? `${user.firstName} ${user.lastName}`
-      : 'N/A'
+  // const fullName =
+  //   user?.firstName && user?.lastName
+  //     ? `${user.firstName} ${user.lastName}`
+  //     : 'N/A'
 
   if (!user) return null
 
@@ -23,7 +24,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ onLogout }) => {
       <h3 className="text-sm font-semibold text-gray-700 mb-2">Profile Info</h3>
       <div className="space-y-1 text-sm text-gray-600 mb-4">
         <div>
-          <strong>Name:</strong> {fullName}
+          <strong>Name:</strong> Test User
         </div>
         <div>
           <strong>Email:</strong> {user.email}
