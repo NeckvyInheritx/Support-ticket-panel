@@ -6,7 +6,7 @@ export const Card = ({
   className?: string
 }) => (
   <div
-    className={`rounded-2xl bg-white text-gray-900 shadow-sm hover:shadow-lg transition-shadow duration-200 ${className}`}
+    className={`rounded-md bg-white text-gray-900 shadow-sm hover:shadow-lg transition-shadow duration-200 ${className}`}
   >
     {children}
   </div>
@@ -18,7 +18,7 @@ export const CardHeader = ({
 }: {
   children: React.ReactNode
   className?: string
-}) => <div className={`p-6 pb-4 ${className || ""}`}>{children}</div>
+}) => <div className={`p-6 pb-4 ${className || ''}`}>{children}</div>
 
 export const CardTitle = ({
   children,

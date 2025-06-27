@@ -38,9 +38,9 @@ export const SearchBar = ({
 }: SearchBarProps) => {
  
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border mb-6">
-      <div className="flex flex-col md:flex-row gap-4 items-center">
-        <div className="flex-1 relative bg-blue-50">
+    <div className="bg-white p-4 rounded-md shadow-sm border mb-6">
+      <div className="flex flex-col justify-between md:flex-row gap-4 items-center">
+        <div className="relative bg-blue-50 w-full md:!w-[384px] rounded-md">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ">
             <SearchIcon/>
           </div>
@@ -52,8 +52,8 @@ export const SearchBar = ({
             className="pl-10 border-none"
           />
         </div>
-        
-        <div className="block md:flex gap-4 items-center">
+
+        <div className="block md:flex w-full md:w-auto gap-4 items-center">
           <div className="flex items-center gap-2 w-full mb-2 md:mb-0">
             <FilterIcon/>
             <div className="w-full"> 
@@ -62,7 +62,7 @@ export const SearchBar = ({
                 value={statusFilter}
                 onChange={onStatusChange}
                 options={statusOptions}
-                selectClassName="w-[250px] md:w-[160px]" 
+                selectClassName=" w-full md:w-[160px]"
                 allowClear
               />
             </div>
@@ -76,7 +76,7 @@ export const SearchBar = ({
                 value={sortBy}
                 onChange={onSortChange}
                 options={sortOptions}
-                selectClassName="w-[250px] md:w-[160px]" 
+                selectClassName="w-full md:w-[160px]"
                 allowClear
               />
             </div>

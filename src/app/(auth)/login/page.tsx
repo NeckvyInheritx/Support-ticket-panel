@@ -7,6 +7,8 @@ import { Input } from '@/components/atoms/Input'
 import { Button } from '@/components/atoms/Button'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
 const validationSchema = Yup.object({
     email: Yup.string()
@@ -20,13 +22,41 @@ const validationSchema = Yup.object({
 export default function LoginForm() {
   const router = useRouter()
   const { login } = useAuth()
+
+  // React Query mutation for login
+  const loginMutation = useMutation({
+    mutationFn: async (values: { email: string; password: string }) => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || ''}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values)
+      })
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || 'Login failed')
+      }
+      return res.json()
+    },
+    onSuccess: (data) => {
+      // Assuming API returns { user: { id, name, email }, token }
+      login(data.user.email, data.user.name, data.user.id)
+      localStorage.setItem('token', data.token)
+      toast.success('Login successful!')
+      router.push('/dashboard')
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      toast.error(error.message || 'Login failed')
+    }
+  })
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-pale-sky">
       <div className="max-w-md w-full space-y-8">
         <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
           {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Sign in</h2>
+            <p className="text-3xl font-bold text-gray-900 !mb-0">Sign in</p>
             <p className="mt-2 text-sm text-gray-600">
               Access your support panel account
             </p>
@@ -36,19 +66,11 @@ export default function LoginForm() {
           <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-             console.log('Attempting to log in with:', values.email)
-              setTimeout(() => {
-                setSubmitting(false)
-                
-                const userName = values.email.split('@')[0]; 
-                const userId = 'user_123'; 
-                login(values.email, userName, userId); 
-                router.push('/dashboard'); 
-              }, 1000);
+            onSubmit={(values) => {
+              loginMutation.mutate(values)
             }}
           >
-            {({ values, handleChange, touched, errors, isSubmitting }) => (
+            {({ values, handleChange, touched, errors }) => (
               <Form className="space-y-6">
                 {/* Email Field */}
                 <div>
@@ -126,15 +148,15 @@ export default function LoginForm() {
                 {/* Submit Button */}
                 <Button 
                   type="submit" 
-                  disabled={isSubmitting}
+                  disabled={loginMutation.isPending}
                   variant='primary'
                   className='w-full'
                 >
-                  {isSubmitting ? (
+                  {loginMutation.isPending ? (
                     <div className="flex items-center justify-center">
                       <ClipLoader
                         color="#ffffff"
-                        loading={isSubmitting}
+                        loading={loginMutation.isPending}
                         size={20}
                         aria-label="Loading Spinner"
                         data-testid="loader"

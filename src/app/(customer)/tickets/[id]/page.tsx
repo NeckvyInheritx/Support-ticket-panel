@@ -132,9 +132,10 @@ export default function TicketDetailPage() {
         {/* Back to List Button */}
         <div className="mb-8">
           <Button
-            variant="outline"
-            onClick={() => router.back()}
-            className="inline-flex gap-2"
+              onClick={() => router.back()}
+              variant="outline"
+              size="medium"
+              className="flex items-center bg-red-600"
           >
             <ArrowLeftIcon />
             Back to List
@@ -172,7 +173,6 @@ export default function TicketDetailPage() {
                     type="button"
                   >
                     <EditIcon size={16} />
-                    Edit
                   </Button>
                 )}
               </div>
