@@ -10,6 +10,7 @@ export type TicketCategory =
   | "Manufacturing & Wholesale"
   | "Accounts & Profile Management"
   | "Feedback & General Enquiries";
+  
 
 export interface Ticket {
   id: string;
