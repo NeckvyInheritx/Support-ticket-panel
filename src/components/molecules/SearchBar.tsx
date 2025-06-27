@@ -1,32 +1,29 @@
 'use client'
-import React from 'react';
-import { Input } from '@/components/atoms/Input';
-import { Select } from '@/components/atoms/Select';
-import { FilterIcon, SearchIcon, SortIcon } from '../icons';
+import React from 'react'
+import { Input } from '@/components/atoms/Input'
+import { Select } from '@/components/atoms/Select'
+import { FilterIcon, SearchIcon, SortIcon } from '../icons'
 
 interface SearchBarProps {
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  statusFilter: string;
-  onStatusChange: (value: string) => void;
-  sortBy: string;
-  onSortChange: (value: string) => void;
+  searchTerm: string
+  onSearchChange: (value: string) => void
+  statusFilter: string
+  onStatusChange: (value: string) => void
+  sortBy: string
+  onSortChange: (value: string) => void
 }
 
- const statusOptions = [
-    { value: 'all', label: 'All Statuses' },
-    { value: 'open', label: 'Open' },
-    { value: 'in-progress', label: 'In Progress' },
-    { value: 'resolved', label: 'Resolved' }
-  ];
+const statusOptions = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'open', label: 'Open' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'resolved', label: 'Resolved' },
+]
 
-  const sortOptions = [
-    { value: 'newest', label: 'Newest First' },
-    { value: 'oldest', label: 'Oldest First' },
-    { value: 'priority', label: 'Priority' },
-    { value: 'status', label: 'Status' }
-  ];
-
+const sortOptions = [
+  { value: 'newest', label: 'Newest First' },
+  { value: 'oldest', label: 'Oldest First' },
+]
 
 export const SearchBar = ({
   searchTerm,
@@ -34,15 +31,14 @@ export const SearchBar = ({
   statusFilter,
   onStatusChange,
   sortBy,
-  onSortChange
+  onSortChange,
 }: SearchBarProps) => {
- 
   return (
     <div className="bg-white p-4 rounded-md shadow-sm border mb-6">
       <div className="flex flex-col justify-between md:flex-row gap-4 items-center">
         <div className="relative bg-blue-50 w-full md:!w-[384px] rounded-md">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ">
-            <SearchIcon/>
+            <SearchIcon />
           </div>
           <Input
             type="text"
@@ -55,8 +51,8 @@ export const SearchBar = ({
 
         <div className="block md:flex w-full md:w-auto gap-4 items-center">
           <div className="flex items-center gap-2 w-full mb-2 md:mb-0">
-            <FilterIcon/>
-            <div className="w-full"> 
+            <FilterIcon />
+            <div className="w-full">
               <Select
                 placeholder="All Statuses"
                 value={statusFilter}
@@ -67,10 +63,10 @@ export const SearchBar = ({
               />
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2 w-full">
-            <SortIcon/>
-            <div className="w-full"> 
+            <SortIcon />
+            <div className="w-full">
               <Select
                 placeholder="Sort by"
                 value={sortBy}
@@ -84,5 +80,5 @@ export const SearchBar = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

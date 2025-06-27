@@ -1,31 +1,39 @@
 'use client';
 
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+// import { useQuery } from '@tanstack/react-query';
+// import toast from 'react-hot-toast';
 
+// 1. Define the User type
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
 }
 
+// 2. Define context value type
 interface AuthContextType {
   user: User | null;
-  login: (email: string, name: string, id: string) => void;
+  login: (email?: string, firstName?: string, lastName?: string, id?: string) => void;
   logout: () => void;
 }
 
-// context
+// 3. Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-//  provider component
+// 4. Local AuthProvider for usage in components
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
-  // On initial load, try to retrieve user from localStorage (or a cookie)
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -33,16 +41,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
-  const login = (email: string, name: string, id: string) => {
-    const newUser = { id, name, email };
+  const login = (
+    email?: string,
+    firstName?: string,
+    lastName?: string,
+    id?: string
+  ) => {
+    if (!email || !firstName || !lastName || !id) {
+      // Optionally, you can throw an error or handle this case as needed
+      return;
+    }
+    const newUser: User = { id, firstName, lastName, email };
     setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser)); // Persist user data
+    localStorage.setItem('user', JSON.stringify(newUser));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user'); // Clear user data
-    router.push('/login'); // Redirect to login page after logout
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    router.push('/login');
   };
 
   return (
@@ -52,53 +70,89 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// New AuthApiProvider for checking auth flow
-export const AuthApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const router = useRouter();
+// 5. AuthApiProvider for authentication check
+// export const AuthApiProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+//   const [user, setUser] = useState<User | null>(null);
+//   const router = useRouter();
 
-  // Check auth status on mount
-  const { isLoading } = useQuery({
-    queryKey: ['auth', 'me'],
-    queryFn: async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      if (!token) throw new Error('No token');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || ''}/auth/me`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) {
-        throw new Error('Invalid session');
-      }
-      return res.json();
-    },
-    retry: false,
-    onSuccess: (data) => {
-      // Assuming API returns { id, name, email }
-      setUser({ id: data.id, name: data.name, email: data.email });
-      localStorage.setItem('user', JSON.stringify({ id: data.id, name: data.name, email: data.email }));
-    },
-    onError: () => {
-      setUser(null);
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      toast.error('Session expired. Please log in again.');
-      router.push('/login');
-    },
-    refetchOnWindowFocus: false,
-  });
+//   useEffect(() => {
+//     const storedUser = localStorage.getItem('user');
+//     if (storedUser) {
+//       const parsedUser: User = JSON.parse(storedUser);
+//       setUser(parsedUser);  // Set user directly from localStorage
+//     }
+//   }, []);
 
-  if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Checking authentication...</div>;
-  }
+//   const { isLoading } = useQuery({
+//     queryKey: ['auth', 'me'],
+//     queryFn: async () => {
+//       const token =
+//         typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+//       if (!token) throw new Error('No token');
+//       const res = await fetch(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL || ''}/auth/me`,
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
+//       if (!res.ok) {
+//         throw new Error('Invalid session');
+//       }
+//       return res.json();
+//     },
+//     enabled: !user,  // Only trigger the API call if `user` is not set
+//     // retry: false,
+//     onSuccess: (data) => {
+//       const newUser: User = {
+//         id: data.id,
+//         firstName: data.firstName,
+//         lastName: data.lastName,
+//         email: data.email,
+//       };
+//       setUser(newUser);
+//       console.log(newUser,'new user');
+//       localStorage.setItem('user', JSON.stringify(newUser));
+//     },
+//     onError: () => {
+//       setUser(null);
+//       localStorage.removeItem('user');
+//       localStorage.removeItem('token');
+//       toast.error('Session expired. Please log in again.');
+//       router.push('/login');
+//     },
+//     refetchOnWindowFocus: false,
+//   });
 
-  return (
-    <AuthContext.Provider value={{ user, login: (email, name, id) => { const newUser = { id, name, email }; setUser(newUser); localStorage.setItem('user', JSON.stringify(newUser)); }, logout: () => { setUser(null); localStorage.removeItem('user'); localStorage.removeItem('token'); router.push('/login'); } }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+//   if (isLoading && !user) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center">
+//         Checking authentication...
+//       </div>
+//     );
+//   }
+//   return (
+//     <AuthContext.Provider
+//       value={{
+//         user,
+//         login: (email, firstName, lastName, id) => {
+//           const newUser: User = { id, firstName, lastName, email };
+//           setUser(newUser);
+//           localStorage.setItem('user', JSON.stringify(newUser));
+//         },
+//         logout: () => {
+//           setUser(null);
+//           localStorage.removeItem('user');
+//           localStorage.removeItem('token');
+//           router.push('/login');
+//         },
+//       }}
+//     >
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
 
-// Custom hook to use the AuthContext
+// 6. Custom hook for context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

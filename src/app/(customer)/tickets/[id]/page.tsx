@@ -4,7 +4,6 @@ import { useParams, useRouter } from 'next/navigation'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { ClipLoader } from 'react-spinners'
-import { customerTicketsStatic } from '@/lib/data'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { TextArea } from '@/components/atoms/TextArea'
@@ -57,39 +56,125 @@ export default function TicketDetailPage() {
     [ticket],
   ) // Depend on the whole ticket object to re-evaluate when ticket is loaded/changes
 
+  // useEffect(() => {
+  //   setLoading(true)
+  //   const foundTicket = customerTicketsStatic.find((t) => t.id === ticketId)
+  //   if (foundTicket) {
+  //     setTicket(foundTicket)
+  //   } else {
+  //     console.error(`Ticket with ID ${ticketId} not found.`)
+  //     // Consider a redirect or displaying a clear "not found" message
+  //   }
+  //   setLoading(false)
+  // }, [ticketId])
+
   useEffect(() => {
-    setLoading(true)
-    const foundTicket = customerTicketsStatic.find((t) => t.id === ticketId)
-    if (foundTicket) {
-      setTicket(foundTicket)
-    } else {
-      console.error(`Ticket with ID ${ticketId} not found.`)
-      // Consider a redirect or displaying a clear "not found" message
+    const fetchTicket = async () => {
+      try {
+        setLoading(true)
+        const token = localStorage.getItem('token')
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || ''
+
+        const response = await fetch(`${baseUrl}/ticket/${ticketId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch ticket')
+        }
+
+        const data = await response.json()
+        const transformedTicket: Ticket = {
+          ...data,
+          id: data._id,
+        }
+
+        setTicket(transformedTicket)
+      } catch (error) {
+        console.error('Error fetching ticket:', error)
+        toast.error('Failed to load ticket.')
+      } finally {
+        setLoading(false)
+      }
     }
-    setLoading(false)
+
+    if (ticketId) {
+      fetchTicket()
+    }
   }, [ticketId])
+
+  // const handleSave = async (
+  //   values: typeof initialFormValues,
+  //   setSubmitting: (isSubmitting: boolean) => void,
+  // ) => {
+  //   console.log('Updating Ticket:', values)
+  //   setSubmitting(true)
+  //   // Simulate API update
+  //   await new Promise((resolve) => setTimeout(resolve, 1000))
+  //   setTicket((prevTicket) =>
+  //     prevTicket
+  //       ? {
+  //           ...prevTicket,
+  //           description: values.description,
+  //           priority: values.priority as Ticket['priority'], // Explicitly cast to Ticket['priority']
+  //           updatedAt: new Date().toISOString(),
+  //         }
+  //       : null,
+  //   )
+  //   setSubmitting(false)
+  //   setIsEditing(false) // Exit edit mode after saving
+  //   toast.success('Ticket updated successfully!') // Replace with a proper notification system
+  // }
 
   const handleSave = async (
     values: typeof initialFormValues,
     setSubmitting: (isSubmitting: boolean) => void,
   ) => {
-    console.log('Updating Ticket:', values)
-    setSubmitting(true)
-    // Simulate API update
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setTicket((prevTicket) =>
-      prevTicket
-        ? {
-            ...prevTicket,
-            description: values.description,
-            priority: values.priority as Ticket['priority'], // Explicitly cast to Ticket['priority']
-            updatedAt: new Date().toISOString(),
-          }
-        : null,
-    )
-    setSubmitting(false)
-    setIsEditing(false) // Exit edit mode after saving
-    toast.success('Ticket updated successfully!') // Replace with a proper notification system
+    try {
+      setSubmitting(true)
+
+      const token = localStorage.getItem('token')
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || ''
+
+      const response = await fetch(`${baseUrl}/ticket/${ticketId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          priority: values.priority,
+          description: values.description,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update ticket')
+      }
+
+      const updatedData = await response.json()
+
+      setTicket((prev) =>
+        prev
+          ? {
+              ...prev,
+              description: updatedData.description,
+              priority: updatedData.priority,
+              updatedAt: new Date().toISOString(),
+            }
+          : null,
+      )
+
+      toast.success('Ticket updated successfully!')
+      setIsEditing(false)
+    } catch (error) {
+      console.error('Update error:', error)
+      toast.error('Failed to update ticket.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleCancel = (resetForm: () => void) => {
@@ -97,17 +182,34 @@ export default function TicketDetailPage() {
     setIsEditing(false) // Exit edit mode
   }
 
-  useEffect(() => {
-    setLoading(true)
-    const foundTicket = customerTicketsStatic.find((t) => t.id === ticketId)
-    if (foundTicket) {
-      setTicket(foundTicket)
-    } else {
-      console.error(`Ticket with ID ${ticketId} not found.`)
-      // Consider a redirect or displaying a clear "not found" message
-    }
-    setLoading(false)
-  }, [ticketId])
+  // useEffect(() => {
+  //   setLoading(true)
+  //   const foundTicket = customerTicketsStatic.find((t) => t.id === ticketId)
+  //   if (foundTicket) {
+  //     setTicket(foundTicket)
+  //   } else {
+  //     console.error(`Ticket with ID ${ticketId} not found.`)
+  //     // Consider a redirect or displaying a clear "not found" message
+  //   }
+  //   setLoading(false)
+  // }, [ticketId])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12">
+        <ClipLoader size={50} color="#3B82F6" />
+        <p className="ml-3 text-gray-700">Loading ticket details...</p>
+      </div>
+    )
+  }
+
+  // if (!ticket) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12">
+  //       <p className="text-xl text-red-600">Ticket not found.</p>
+  //     </div>
+  //   )
+  // }
 
   if (loading) {
     return (
@@ -132,10 +234,10 @@ export default function TicketDetailPage() {
         {/* Back to List Button */}
         <div className="mb-8">
           <Button
-              onClick={() => router.back()}
-              variant="outline"
-              size="medium"
-              className="flex items-center bg-red-600"
+            onClick={() => router.back()}
+            variant="outline"
+            size="medium"
+            className="flex items-center bg-red-600"
           >
             <ArrowLeftIcon />
             Back to List
@@ -284,9 +386,9 @@ export default function TicketDetailPage() {
 
                   {/* Description Section - Editable */}
                   <div className="border-t border-gray-100 pt-8">
-                      <CardTitle className="text-sm opacity-70 !font-bold text-gray-500 uppercase">
-                        Description
-                      </CardTitle>
+                    <CardTitle className="text-sm opacity-70 !font-bold text-gray-500 uppercase">
+                      Description
+                    </CardTitle>
 
                     {isEditing ? (
                       <div>
@@ -302,9 +404,9 @@ export default function TicketDetailPage() {
                         />
                       </div>
                     ) : (
-                        <p className="text-gray-800 text-base">
-                          {ticket.description}
-                        </p>
+                      <p className="text-gray-800 text-base">
+                        {ticket.description}
+                      </p>
                     )}
                   </div>
                 </CardContent>
@@ -321,7 +423,7 @@ export default function TicketDetailPage() {
                       Cancel
                     </Button>
                     <Button
-                      className='!bg-blue-200'
+                      className="!bg-blue-200"
                       type="submit"
                       variant="primary"
                       disabled={isSubmitting}

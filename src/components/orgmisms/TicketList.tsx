@@ -10,7 +10,9 @@ export const TicketList = ({ tickets }: TicketListProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-6">
       {tickets.length > 0 ? (
-        tickets.map((ticket) => <TicketCard key={ticket.id} ticket={ticket} />)
+        tickets.map((ticket) => (
+          <TicketCard key={ticket.id} ticket={ticket} />
+        ))
       ) : (
         <div className="col-span-full text-center py-10 text-gray-500 text-lg">
           No tickets found matching your criteria.
