@@ -22,7 +22,7 @@ interface User {
 // 2. Define context value type
 interface AuthContextType {
   user: User | null;
-  login: (email: string, firstName: string, lastName: string, id: string) => void;
+  login: (email?: string, firstName?: string, lastName?: string, id?: string) => void;
   logout: () => void;
 }
 
@@ -42,11 +42,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = (
-    email: string,
-    firstName: string,
-    lastName: string,
-    id: string
+    email?: string,
+    firstName?: string,
+    lastName?: string,
+    id?: string
   ) => {
+    if (!email || !firstName || !lastName || !id) {
+      // Optionally, you can throw an error or handle this case as needed
+      return;
+    }
     const newUser: User = { id, firstName, lastName, email };
     setUser(newUser);
     localStorage.setItem('user', JSON.stringify(newUser));

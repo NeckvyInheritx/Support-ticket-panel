@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { useRouter } from 'next/navigation'
 import { Formik, Form, ErrorMessage } from 'formik'
@@ -44,7 +45,6 @@ export default function LoginForm() {
       toast.success('Login successful!')
       router.push('/dashboard')
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.message || 'Login failed')
     }
