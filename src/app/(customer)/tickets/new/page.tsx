@@ -9,6 +9,9 @@ import { Select } from '@/components/atoms/Select'
 import { Button } from '@/components/atoms/Button'
 import { ticketCategoryOptions, ticketPriorityOptions } from '@/lib/constants/ticket'
 import toast from 'react-hot-toast'
+import {
+  ArrowLeftIcon
+} from '@/components/icons'
 
 
 const validationSchema = Yup.object({
@@ -27,7 +30,22 @@ export default function CreateNewTicketPage() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-100px)]">
+      <div className="flex flex-col items-center justify-center">
+        <div className="max-w-xl w-full">
+        <div className="mb-8">
+          <Button
+              onClick={() => router.back()}
+              variant="outline"
+              size="medium"
+              className="flex items-center"
+          >
+            <ArrowLeftIcon />
+            Back to List
+          </Button>
+        </div>
+        </div>
+
       <div className="max-w-xl">
         <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
           {/* Header */}
@@ -206,6 +224,8 @@ export default function CreateNewTicketPage() {
           </Formik>
         </div>
       </div>
+      </div>
+    
     </div>
   )
 }

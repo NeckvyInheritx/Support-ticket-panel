@@ -50,14 +50,14 @@ export const TicketCard = ({ ticket }: TicketCardProps) => {
   return (
     <Link
       href={`/tickets/${ticket.id}`}
-      className="hover:shadow-lg transition-shadow duration-200 rounded-lg"
+      className="hover:shadow-lg transition-shadow duration-200 rounded-md"
     >
       <Card
         className="h-full flex flex-col"
         data-testid={`ticket-card-${ticket.id}`}
       >
         {/* Card Header Section */}
-        <CardHeader className="pb-3">
+        <CardHeader className="!pb-0">
           <div className="flex justify-between items-start gap-3">
             <div className="flex-1">
               <CardTitle className="text-lg mb-1 hover:text-blue-600 transition-colors">
@@ -76,7 +76,7 @@ export const TicketCard = ({ ticket }: TicketCardProps) => {
         </CardHeader>
 
         {/* Card Content Section */}
-        <CardContent className="flex-grow pb-4 space-y-3">
+        <CardContent className="flex-grow pb-4 space-y-3 !pt-0">
           <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
             {ticket.description}
           </p>

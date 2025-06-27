@@ -6,33 +6,69 @@ import { ClipLoader } from 'react-spinners'
 import { Input } from '@/components/atoms/Input'
 import { Button } from '@/components/atoms/Button'
 import Link from 'next/link'
+import { useState } from 'react'
+import { useAuth } from '@/context/AuthContext'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
-  const validationSchema = Yup.object({
-    firstName: Yup.string()
-      .min(2, 'First name must be at least 2 characters')
-      .max(50, 'First name must be less than 50 characters')
-      .required('First name is required'),
-    lastName: Yup.string()
-      .min(2, 'Last name must be at least 2 characters')
-      .max(50, 'Last name must be less than 50 characters')
-      .required('Last name is required'),
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password')], 'Passwords must match')
-      .required('Please confirm your password'),
-    agreeToTerms: Yup.boolean()
-      .oneOf([true], 'You must agree to the Terms of Service and Privacy Policy')
-      .required('You must agree to the Terms of Service and Privacy Policy'),
-  })
+const validationSchema = Yup.object({
+  firstName: Yup.string()
+    .min(2, 'First name must be at least 2 characters')
+    .max(50, 'First name must be less than 50 characters')
+    .required('First name is required'),
+  lastName: Yup.string()
+    .min(2, 'Last name must be at least 2 characters')
+    .max(50, 'Last name must be less than 50 characters')
+    .required('Last name is required'),
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required'),
+  password: Yup.string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'Passwords must match')
+    .required('Please confirm your password'),
+  agreeToTerms: Yup.boolean()
+    .oneOf([true], 'You must agree to the Terms of Service and Privacy Policy')
+    .required('You must agree to the Terms of Service and Privacy Policy'),
+})
 
 export default function SignupForm() {
   const router = useRouter()
-  
+  const { login } = useAuth()
+
+  // React Query mutation for signup
+  const signupMutation = useMutation({
+    mutationFn: async (values: { firstName: string; lastName: string; email: string; password: string }) => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || ''}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          password: values.password
+        })
+      })
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || 'Signup failed')
+      }
+      return res.json()
+    },
+    onSuccess: (data) => {
+      // Assuming API returns { user: { id, name, email }, token }
+      login(data.user.email, data.user.name, data.user.id)
+      localStorage.setItem('token', data.token)
+      toast.success('Signup successful!')
+      router.push('/dashboard')
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Signup failed')
+    }
+  })
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -56,21 +92,11 @@ export default function SignupForm() {
               agreeToTerms: false
             }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log('New user signup:', {
-                firstName: values.firstName,
-                lastName: values.lastName,
-                email: values.email,
-                agreeToTerms: values.agreeToTerms
-              })
-              // Simulate API call
-              setTimeout(() => {
-                setSubmitting(false)
-                router.push('/dashboard')
-              }, 1500)
+            onSubmit={(values) => {
+              signupMutation.mutate(values)
             }}
           >
-            {({ values, handleChange, touched, errors, isSubmitting }) => (
+            {({ values, handleChange, touched, errors }) => (
               <Form className="space-y-6">
                 {/* Name Fields Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -236,15 +262,15 @@ export default function SignupForm() {
                 {/* Submit Button */}
                 <Button 
                   type="submit" 
-                  disabled={isSubmitting}
+                  disabled={signupMutation.isPending}
                   variant='primary'
                   className='w-full'
                 >
-                  {isSubmitting ? (
+                  {signupMutation.isPending ? (
                     <div className="flex items-center justify-center">
                       <ClipLoader
                         color="#ffffff"
-                        loading={isSubmitting}
+                        loading={signupMutation.isPending}
                         size={20}
                         aria-label="Loading Spinner"
                         data-testid="loader"
