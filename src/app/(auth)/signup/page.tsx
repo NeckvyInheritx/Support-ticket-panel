@@ -6,7 +6,6 @@ import { ClipLoader } from 'react-spinners'
 import { Input } from '@/components/atoms/Input'
 import { Button } from '@/components/atoms/Button'
 import Link from 'next/link'
-import { useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
@@ -64,6 +63,7 @@ export default function SignupForm() {
       toast.success('Signup successful!')
       router.push('/dashboard')
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.message || 'Signup failed')
     }

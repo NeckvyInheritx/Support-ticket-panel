@@ -7,7 +7,6 @@ import { Input } from '@/components/atoms/Input'
 import { Button } from '@/components/atoms/Button'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
-import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
@@ -45,6 +44,7 @@ export default function LoginForm() {
       toast.success('Login successful!')
       router.push('/dashboard')
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.message || 'Login failed')
     }
