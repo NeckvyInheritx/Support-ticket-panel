@@ -173,13 +173,13 @@ import { useRouter } from 'next/navigation'
 import Button from '../atoms/Button'
 import Avatar from '../atoms/Avatar'
 import { useAuth } from '@/context/AuthContext'
-import ProfileModal from '../atoms/ProfileModal'
+// import ProfileModal from '../atoms/ProfileModal'
 
 const Navbar: React.FC = () => {
   const router = useRouter()
   const {  logout } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   const fullName = "Test User"
   // const fullName =
@@ -206,21 +206,23 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Avatar + Modal */}
-            <div
-              className="relative"
-              onMouseEnter={() => setIsProfileModalOpen(true)}
-              onMouseLeave={() => setIsProfileModalOpen(false)}
-            >
-              <div className="flex items-center space-x-3 cursor-pointer">
-                <Avatar name={fullName} size="medium" />
-                <span className="font-medium text-sm lg:text-base">
-                  {fullName}
-                </span>
-              </div>
-              {isProfileModalOpen && <ProfileModal onLogout={handleLogout} />}
-            </div>
+           <div className="hidden md:flex items-center space-x-4">
+             <>
+               {/* Profile Avatar and Name */}
+               <div className="flex items-center space-x-3">
+                 <Avatar name={fullName} size="medium" />
+                 <span className="font-medium text-sm lg:text-base">{fullName}</span>
+               </div>
+               {/* Logout Button */}
+               <Button
+                 variant="outline"
+                 size="small"
+                 onClick={handleLogout}
+                 className="whitespace-nowrap"
+               >
+                 Logout
+               </Button>
+             </>
           </div>
 
           {/* Mobile Menu Toggle */}
